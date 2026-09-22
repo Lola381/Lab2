@@ -5,7 +5,7 @@
 - Project: MERN Book CRUD application
 - GitHub repository: https://github.com/Lola381/Lab2
 - Branch: `main`
-- Final commit: `66e477d`
+- Latest documented commit: `0140e9c`
 - Workflow file: `.github/workflows/ci.yml`
 - Workflow name: `CI`
 

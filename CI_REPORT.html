@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CI Pipeline Implementation Report</title>
+  <style>
+    @page { size: A4; margin: 18mm 16mm; }
+    :root { --ink: #172033; --muted: #5b667a; --line: #d9e0ea; --blue: #1769aa; --green: #18864b; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); font: 10.5pt Arial, sans-serif; line-height: 1.48; }
+    h1 { margin: 0 0 6px; color: #fff; font-size: 28pt; line-height: 1.1; }
+    h2 { margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--blue); color: var(--blue); font-size: 16pt; }
+    h3 { margin: 15px 0 5px; color: #263b59; font-size: 12pt; }
+    p { margin: 6px 0 9px; }
+    ul, ol { margin-top: 5px; padding-left: 22px; }
+    li { margin: 3px 0; }
+    code { color: #173b63; font-family: Consolas, monospace; }
+    pre { padding: 10px 12px; border-left: 4px solid var(--blue); background: #f1f5f9; font: 8.5pt Consolas, monospace; white-space: pre-wrap; }
+    .cover { min-height: 245mm; padding: 22mm 18mm; color: #fff; background: linear-gradient(135deg, #12355b, #1769aa); }
+    .cover p { color: #dbeafe; font-size: 13pt; }
+    .cover img { display: block; width: 100%; max-height: 105mm; object-fit: cover; margin: 24mm 0 18mm; border: 5px solid rgba(255,255,255,.75); }
+    .meta { margin-top: 25mm; padding: 12px 15px; border: 1px solid rgba(255,255,255,.35); color: #e0f2fe; }
+    .diagram { width: 100%; margin: 8px 0 15px; border: 1px solid var(--line); }
+    .status { padding: 10px 14px; border-left: 5px solid var(--green); background: #ecfdf3; }
+    .page-break { page-break-before: always; }
+    .small { color: var(--muted); font-size: 9pt; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <h1>CI Pipeline<br>Implementation Report</h1>
+    <p>MERN Book CRUD application</p>
+    <img src="frontend/src/assets/hero.png" alt="Book application artwork">
+    <div class="meta">
+      <strong>Repository:</strong> github.com/Lola381/Lab2<br>
+      <strong>Branch:</strong> main<br>
+      <strong>Latest commit:</strong> 0140e9c<br>
+      <strong>Workflow:</strong> .github/workflows/ci.yml<br>
+      <strong>Date:</strong> 22 September 2026
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>1. Objective</h2>
+    <p>Implement a basic continuous integration pipeline that runs automatically when changes are pushed to GitHub or submitted through a pull request.</p>
+    <img class="diagram" src="ci-pipeline.svg" alt="GitHub Actions CI pipeline diagram">
+
+    <h2>2. Work Completed</h2>
+    <ul>
+      <li>Added GitHub Actions workflow with <code>push</code> and <code>pull_request</code> triggers.</li>
+      <li>Configured an Ubuntu runner with Node.js 20.</li>
+      <li>Added reproducible dependency installation for backend and frontend using <code>npm ci</code>.</li>
+      <li>Added backend syntax validation with <code>node --check server.js</code>.</li>
+      <li>Added frontend linting and Vite production build checks.</li>
+      <li>Added a root <code>.gitignore</code> to protect credentials, dependencies, and build output.</li>
+    </ul>
+
+    <h3>Source corrections required by CI</h3>
+    <ul>
+      <li>Removed unused imports in <code>App.jsx</code> and <code>BookTable.jsx</code>.</li>
+      <li>Adjusted the initial book-loading effect in <code>Books.jsx</code> to satisfy the React lint rule.</li>
+    </ul>
+  </section>
+
+  <section class="page-break">
+    <h2>3. Important Commands</h2>
+    <h3>Local validation</h3>
+    <pre>cd backend
+npm ci
+node --check server.js
+
+cd ..\frontend
+npm ci
+npm run lint
+npm run build</pre>
+
+    <h3>Repository setup and push</h3>
+    <pre>git init -b main
+git remote add origin https://github.com/Lola381/Lab2.git
+git fetch origin main
+git add .
+git commit -m "Add MERN book CRUD app and CI workflow"
+git merge origin/main --allow-unrelated-histories --no-edit
+git push -u origin main</pre>
+
+    <h3>Verify remote synchronization</h3>
+    <pre>$localCommit = git rev-parse HEAD
+$remoteCommit = (git ls-remote origin refs/heads/main).Split("`t")[0]
+git status --short</pre>
+
+    <h2>4. Validation Result</h2>
+    <div class="status"><strong>Successful:</strong> The GitHub Actions <code>validate</code> job passed all five stages: backend dependency installation, backend syntax check, frontend dependency installation, frontend lint, and frontend build.</div>
+    <p class="small">The frontend reported one non-blocking React Compiler warning for React Hook Form's <code>watch()</code> API. Backend installation reported one moderate npm audit vulnerability; neither issue failed the pipeline.</p>
+
+    <h2>5. Final Status</h2>
+    <ul>
+      <li>GitHub push: successful</li>
+      <li>GitHub Actions CI: successful</li>
+      <li>Local and remote commit hashes: matched</li>
+      <li>Working tree: clean</li>
+    </ul>
+  </section>
+</body>
+</html>
